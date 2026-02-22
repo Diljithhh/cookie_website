@@ -5,23 +5,29 @@ import { useEffect } from 'react';
 export default function Home() {
   useEffect(() => {
     // Scroll handling for background parallax and header styling
+    let ticking = false;
+
     const handleScroll = () => {
-      const scrolled = window.scrollY;
-      const bg = document.getElementById('bg-canvas');
-      const header = document.querySelector('header');
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrolled = window.scrollY;
+          const bg = document.getElementById('bg-canvas');
+          const header = document.querySelector('header');
 
-      if (bg) {
-        bg.style.transform = `translateY(${scrolled * 0.3}px)`;
-      }
+          if (bg) {
+            bg.style.transform = `translateY(${scrolled * 0.2}px)`; // Reduced speed for better perf
+          }
 
-      if (header) {
-        if (scrolled > 50) {
-          header.style.background = 'rgba(15, 23, 42, 0.8)';
-          header.style.backdropFilter = 'blur(10px)';
-        } else {
-          header.style.background = 'transparent';
-          header.style.backdropFilter = 'none';
-        }
+          if (header) {
+            if (scrolled > 50) {
+              header.classList.add('scrolled');
+            } else {
+              header.classList.remove('scrolled');
+            }
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
